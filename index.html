@@ -1,130 +1,114 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.5">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thousands Card Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }
+        #game-board { display: flex; gap: 20px; }
+        #player-hand, #discard-pile, #draw-pile { border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
+        button { margin-top: 10px; }
+        .card { display: inline-block; margin: 5px; padding: 5px 10px; background-color: #fff; border: 1px solid #aaa; border-radius: 5px; }
+        #log { margin-top: 20px; height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Thousands Card Game&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#game-board { display: flex; gap: 20px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#player-hand, #discard-pile, #draw-pile { border: 1px solid #ccc; padding: 10px; border-radius: 5px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>button { margin-top: 10px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.card { display: inline-block; margin: 5px; padding: 5px 10px; background-color: #fff; border: 1px solid #aaa; border-radius: 5px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#log { margin-top: 20px; height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;h2&gt;Thousands Card Game&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div id="game-board"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="player-hand"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Your Hand:&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="hand-cards"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="discard-pile"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Discard Pile:&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="discard-cards"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="draw-pile"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Draw Pile:&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="drawCard()"&gt;Draw Card&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div id="log"&gt;&lt;strong&gt;Game Log:&lt;/strong&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;button onclick="pickupPile()"&gt;Pick Up Discard&lt;/button&gt;</p>
-<p class="p1">&lt;button onclick="playCards()"&gt;Play Cards&lt;/button&gt;</p>
-<p class="p1">&lt;button onclick="discardCard()"&gt;Discard Card&lt;/button&gt;</p>
-<p class="p1">&lt;button onclick="callLastCard()"&gt;Call Last Card&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Initialize Game Logic</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const suits = ['hearts', 'diamonds', 'clubs', 'spades'];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const specialCards = ['Joker'];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const players = [{ name: 'You', hand: [], score: 0 }, { name: 'Bot 1', hand: [], score: 0 }, { name: 'Bot 2', hand: [], score: 0 }];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let discardPile = [];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let drawPile = [];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function createDeck() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const deck = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; 2; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>suits.forEach(suit =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>ranks.forEach(rank =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>deck.push({ rank, suit, points: getCardValue(rank, suit) });</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>specialCards.forEach(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>deck.push({ rank: 'Joker', suit: null, points: 20 });</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return deck;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function getCardValue(rank, suit) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (rank === 'A') return 20;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (['10', 'J', 'Q', 'K'].includes(rank)) return 10;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (rank === 'Q' &amp;&amp; suit === 'spades') return 100;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (['2', '3', '4', '5', '6', '7', '8', '9'].includes(rank)) return 5;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function shuffle(deck) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = deck.length - 1; i &gt; 0; i--) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const j = Math.floor(Math.random() * (i + 1));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>[deck[i], deck[j]] = [deck[j], deck[i]];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return deck;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function initializeGame() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const deck = createDeck();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>drawPile = shuffle(deck);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>players.forEach(player =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>player.hand = drawPile.splice(0, 13);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>discardPile.push(drawPile.pop());</p>
-<p class="p1"><span class="Apple-converted-space">        </span>updateDisplay();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function updateDisplay() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('hand-cards').innerHTML = players[0].hand.map((card, index) =&gt; `&lt;div class='card'&gt;${card.rank} of ${card.suit}&lt;/div&gt;`).join('');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('discard-cards').innerHTML = discardPile.map(card =&gt; `&lt;div class='card'&gt;${card.rank} of ${card.suit}&lt;/div&gt;`).join('');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function drawCard() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const card = drawPile.pop();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>players[0].hand.push(card);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>log(`You drew ${card.rank} of ${card.suit}`);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>updateDisplay();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function log(message) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const logDiv = document.getElementById('log');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>logDiv.innerHTML += `&lt;p&gt;${message}&lt;/p&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>logDiv.scrollTop = logDiv.scrollHeight;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>window.onload = initializeGame;</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+<h2>Thousands Card Game</h2>
+
+<div id="game-board">
+    <div id="player-hand">
+        <h3>Your Hand:</h3>
+        <div id="hand-cards"></div>
+    </div>
+    <div id="discard-pile">
+        <h3>Discard Pile:</h3>
+        <div id="discard-cards"></div>
+    </div>
+    <div id="draw-pile">
+        <h3>Draw Pile:</h3>
+        <button onclick="drawCard()">Draw Card</button>
+    </div>
+</div>
+
+<div id="log"><strong>Game Log:</strong></div>
+
+<button onclick="pickupPile()">Pick Up Discard</button>
+<button onclick="playCards()">Play Cards</button>
+<button onclick="discardCard()">Discard Card</button>
+<button onclick="callLastCard()">Call Last Card</button>
+
+<script>
+    // Initialize Game Logic
+    const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    const specialCards = ['Joker'];
+    const players = [{ name: 'You', hand: [], score: 0 }, { name: 'Bot 1', hand: [], score: 0 }, { name: 'Bot 2', hand: [], score: 0 }];
+    let discardPile = [];
+    let drawPile = [];
+
+    function createDeck() {
+        const deck = [];
+        for (let i = 0; i < 2; i++) {
+            suits.forEach(suit => {
+                ranks.forEach(rank => {
+                    deck.push({ rank, suit, points: getCardValue(rank, suit) });
+                });
+            });
+            specialCards.forEach(() => {
+                deck.push({ rank: 'Joker', suit: null, points: 20 });
+            });
+        }
+        return deck;
+    }
+
+    function getCardValue(rank, suit) {
+        if (rank === 'A') return 20;
+        if (['10', 'J', 'Q', 'K'].includes(rank)) return 10;
+        if (rank === 'Q' && suit === 'spades') return 100;
+        if (['2', '3', '4', '5', '6', '7', '8', '9'].includes(rank)) return 5;
+        return 0;
+    }
+
+    function shuffle(deck) {
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        return deck;
+    }
+
+    function initializeGame() {
+        const deck = createDeck();
+        drawPile = shuffle(deck);
+        players.forEach(player => {
+            player.hand = drawPile.splice(0, 13);
+        });
+        discardPile.push(drawPile.pop());
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        document.getElementById('hand-cards').innerHTML = players[0].hand.map((card, index) => `<div class='card'>${card.rank} of ${card.suit}</div>`).join('');
+        document.getElementById('discard-cards').innerHTML = discardPile.map(card => `<div class='card'>${card.rank} of ${card.suit}</div>`).join('');
+    }
+
+    function drawCard() {
+        const card = drawPile.pop();
+        players[0].hand.push(card);
+        log(`You drew ${card.rank} of ${card.suit}`);
+        updateDisplay();
+    }
+
+    function log(message) {
+        const logDiv = document.getElementById('log');
+        logDiv.innerHTML += `<p>${message}</p>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    window.onload = initializeGame;
+</script>
+
 </body>
 </html>
