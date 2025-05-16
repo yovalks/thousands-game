@@ -6,11 +6,32 @@
     <title>Thousands Card Game</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }
-        #game-board { display: flex; gap: 20px; }
-        #player-hand, #discard-pile, #draw-pile { border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
+        #game-board { display: flex; gap: 20px; justify-content: space-between; }
+        #player-hand, #discard-pile, #draw-pile { border: 1px solid #ccc; padding: 10px; border-radius: 5px; background-color: #fff; }
         button { margin-top: 10px; }
-        .card { display: inline-block; margin: 5px; padding: 5px 10px; background-color: #fff; border: 1px solid #aaa; border-radius: 5px; }
+        .card { 
+            display: inline-block; 
+            margin: 5px; 
+            padding: 5px 10px; 
+            background-color: #e3e3e3; 
+            border: 1px solid #aaa; 
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
         #log { margin-top: 20px; height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+        #hand-cards {
+            display: flex;
+            gap: 5px;
+        }
+        #play-area {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 100px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
     </style>
 </head>
 <body>
@@ -32,6 +53,11 @@
     </div>
 </div>
 
+<div id="play-area">
+    <h3>Play Area:</h3>
+    <div id="play-cards"></div>
+</div>
+
 <div id="log"><strong>Game Log:</strong></div>
 
 <button onclick="pickupPile()">Pick Up Discard</button>
@@ -40,7 +66,6 @@
 <button onclick="callLastCard()">Call Last Card</button>
 
 <script>
-    // Initialize Game Logic
     const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
     const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     const specialCards = ['Joker'];
@@ -90,7 +115,18 @@
     }
 
     function updateDisplay() {
-        document.getElementById('hand-cards').innerHTML = players[0].hand.map((card, index) => `<div class='card'>${card.rank} of ${card.suit}</div>`).join('');
+        const handDiv = document.getElementById('hand-cards');
+        handDiv.innerHTML = '';
+        players[0].hand.forEach((card, index) => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            cardElement.innerText = `${card.rank} of ${card.suit}`;
+            cardElement.draggable = true;
+            cardElement.ondragstart = (e) => {
+                e.dataTransfer.setData('text/plain', index);
+            };
+            handDiv.appendChild(cardElement);
+        });
         document.getElementById('discard-cards').innerHTML = discardPile.map(card => `<div class='card'>${card.rank} of ${card.suit}</div>`).join('');
     }
 
